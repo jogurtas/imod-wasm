@@ -1,0 +1,30 @@
+* {
+  font-family: 'Roboto', sans-serif;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  background-color: #f2f2f2
+}
+
+div {
+  color: #292929;
+}
+
+#wrapper {
+  display: flex;
+}
+
+#gui {
+  flex: 0 0 380px;
+}
+
+#canvas {
+  flex: 1;
+}
+
+#filters {
+  flex: 1;
+  padding-left: 20px;
+}
