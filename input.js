@@ -17,12 +17,12 @@ function input() {
   inputLoad.id("file-upload");
   inputLoad.position(0, 0);
 
-  btnLoad = createButton("RESET");
-  btnLoad.parent("btns");
-  btnLoad.mousePressed(function() {
-    windowResized();
-    document.getElementById("sel").selectedIndex = 0;
-  });
+  // btnLoad = createButton("RESET");
+  // btnLoad.parent("btns");
+  // btnLoad.mousePressed(function() {
+  //   windowResized();
+  //   document.getElementById("sel").selectedIndex = 0;
+  // });
 
   btnExport = createButton("SAVE");
   btnExport.parent("btns");
