@@ -2,16 +2,11 @@
 
 var img, originalImageData, canvas;
 
-function preload() {
-  let path = "img/img_road.jpg";
-  img = loadImage(path);
-}
-
 async function setup() {
   pixelDensity(1);
   canvas = createCanvas(10, 10);
   canvas.parent("canvas");
-  buttons();
+  input();
 }
 
 function draw() {
@@ -19,8 +14,12 @@ function draw() {
 }
 
 function windowResized() {
-  resizeMainImage();
-  resizeIconImages();
+  if (img) {
+    var canvasDiv = document.getElementById("canvas");
+    var ratio = Math.min(canvasDiv.offsetWidth / img.width, canvasDiv.offsetHeight / img.height);
+    resizeCanvas(Math.ceil(img.width * ratio), Math.ceil(img.height * ratio));
+    image(img, 0, 0, img.width * ratio, img.height * ratio);
+  }
 }
 
 function loadLib() {
@@ -29,7 +28,7 @@ function loadLib() {
       version: Module.cwrap("version", "number", []),
       create_buffer: Module.cwrap("create_buffer", "number", ["number", "number"]),
       destroy_buffer: Module.cwrap("destroy_buffer", "", ["number"]),
-      green: Module.cwrap("green", "", ["number", "number", "number", "number"]),
+      green: Module.cwrap("green", "", ["number", "number", "number", "number", "number"]),
       get_result_pointer: Module.cwrap("get_result_pointer", "number", []),
       get_result_size: Module.cwrap("get_result_size", "number", [])
     };
@@ -53,26 +52,22 @@ function copyPixelArray(data) {
   updatePixels();
 }
 
-async function useWasm() {
+async function useWasm(index) {
   // WASM
+  windowResized();
   loadPixels();
 
-  console.log("Canvas w: " + canvas.width + "; h: " + canvas.height + ";");
-  console.log("Image w: " + img.width + "; h: " + img.height + ";");
   var imod = await loadLib();
   const p = imod.create_buffer(canvas.width, canvas.height);
   Module.HEAP8.set(pixels, p);
-  var w = imod.green(p, canvas.width, canvas.height, 4);
+  var size = imod.green(p, canvas.width, canvas.height, 4, index);
 
   const resultPointer = imod.get_result_pointer();
   const resultSize = imod.get_result_size();
   const resultView = new Uint8Array(Module.HEAP8.buffer, resultPointer, resultSize);
   const result = new Uint8Array(resultView);
 
-  console.log(pixels);
   copyPixelArray(result);
-  console.log(pixels);
-  console.log(imod.version());
-
   updatePixels();
+  imod.destroy_buffer(p);
 }
