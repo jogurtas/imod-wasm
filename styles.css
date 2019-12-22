@@ -1,0 +1,110 @@
+@import url("https://fonts.googleapis.com/css?family=Raleway:300,400");
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Raleway", sans-serif;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: #1e1e1e;
+  color: #4fc08d;
+  text-decoration: none;
+  letter-spacing: 1px;
+}
+
+.menu-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #333;
+  color: #fff;
+  padding-bottom: 3px;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100vh;
+}
+
+.image {
+  flex-grow: 1;
+}
+
+#canvas {
+  display: flex;
+  background: #1e1e1e;
+  justify-content: center;
+  align-items: center;
+}
+
+#icons-bar {
+  display: flex;
+  overflow-x: auto;
+  overflow-y: hidden;
+  height: 20vh;
+  background: #333;
+  color: #fff;
+}
+
+#icons-bar > img {
+  display: block;
+  float: left;
+  padding: 0.5%;
+}
+
+/* Buttons */
+button {
+  color: #fff !important;
+  text-decoration: none;
+  border: 1px solid #41b883;
+  background: #333;
+  padding: 6px 10px;
+  border-radius: 2px;
+  display: inline-block;
+  transition: all 0.4s ease 0s;
+  letter-spacing: 1.5px;
+  margin: 5px;
+}
+
+button:hover {
+  color: #ffffff !important;
+  background: #4fc08d;
+  border-color: #4fc08d !important;
+  transition: all 0.4s ease 0s;
+}
+
+a {
+  color: #4fc08d;
+  text-decoration: none;
+  letter-spacing: 1px;
+}
+
+/* File upload input */
+input[type="file"] {
+  display: none;
+}
+.custom-file-upload {
+  font-size: 0.84em;
+  text-decoration: none;
+  border: 1px solid #41b883;
+  background: #333;
+  padding: 6px 10px;
+  border-radius: 2px;
+  display: inline-block;
+  transition: all 0.4s ease 0s;
+  letter-spacing: 1.5px;
+  margin: 5px;
+}
+.custom-file-upload:hover {
+  color: #ffffff !important;
+  background: #4fc08d;
+  border-color: #4fc08d !important;
+  transition: all 0.4s ease 0s;
+}

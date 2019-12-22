@@ -1,21 +1,30 @@
 <!DOCTYPE html>
-<html lang="">
+<html lang="en">
   <head>
-    <meta charset="utf-8" />
+    <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" type="text/css" href="style.css" />
-    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet" />
-    <title>shadeon</title>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>imod</title>
+    <link rel="stylesheet" href="styles.css" />
     <script src="p5/p5.js"></script>
     <script src="p5/p5.dom.js"></script>
+    <script src="input.js"></script>
+    <script src="resize.js"></script>
     <script src="sketch.js"></script>
     <script src="a.out.js"></script>
   </head>
-
-  <body>
-    <div id="wrapper">
-      <div id="gui"></div>
-      <div id="canvas"></div>
+  <body id="body">
+    <div class="wrapper">
+      <div class="menu-bar">
+        <a href="#" style="font-size: 1em; padding-left: 10px;">IMOD</a>
+        <div id="btns" style="padding-right: 2px;">
+          <label for="file-upload" class="custom-file-upload">LOAD</label>
+        </div>
+      </div>
+      <div class="image">
+        <div id="canvas" style="height: 100%;"></div>
+      </div>
+      <div id="icons-bar"></div>
     </div>
   </body>
 </html>

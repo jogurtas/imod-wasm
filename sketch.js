@@ -1,6 +1,6 @@
 // browser-sync start --server -f -w
 
-let img;
+var img, originalImageData, canvas;
 
 function preload() {
   let path = "img/img_road.jpg";
@@ -8,42 +8,33 @@ function preload() {
 }
 
 async function setup() {
-  const canvas = createCanvas(img.width, img.height);
   pixelDensity(1);
+  canvas = createCanvas(10, 10);
   canvas.parent("canvas");
-  textFont("Roboto");
-
-  image(img, 0, 0);
-  loadPixels();
-  //console.log(pixels);
-
-  // WASM
-  var imod = await loadLib();
-  const p = imod.create_buffer(canvas.width, canvas.height);
-  Module.HEAP8.set(pixels, p);
-  var w = imod.green(p, canvas.width, canvas.height, 4);
-
-  const resultPointer = imod.get_result_pointer();
-  const resultSize = imod.get_result_size();
-  const resultView = new Uint8Array(Module.HEAP8.buffer, resultPointer, resultSize);
-  const result = new Uint8Array(resultView);
-  
-  console.log(pixels);
-
-  copyPixelArray(result); 
-  
-  //console.log("Width: " + w);
-  //console.log("Ptr: " + p);
-  //imod.destroy_buffer(p);
-
-  console.log(pixels);
-  //console.log(imod.version());
-
-  updatePixels();
+  buttons();
 }
 
 function draw() {
-  //image(img, 0, 0);
+  noLoop();
+}
+
+function windowResized() {
+  resizeMainImage();
+  resizeIconImages();
+}
+
+function loadLib() {
+  return new Promise(resolve => {
+    const imod = {
+      version: Module.cwrap("version", "number", []),
+      create_buffer: Module.cwrap("create_buffer", "number", ["number", "number"]),
+      destroy_buffer: Module.cwrap("destroy_buffer", "", ["number"]),
+      green: Module.cwrap("green", "", ["number", "number", "number", "number"]),
+      get_result_pointer: Module.cwrap("get_result_pointer", "number", []),
+      get_result_size: Module.cwrap("get_result_size", "number", [])
+    };
+    resolve(imod);
+  });
 }
 
 function copyPixelArray(data) {
@@ -59,20 +50,29 @@ function copyPixelArray(data) {
       pixels[index + 3] = 255;
     }
   }
-
   updatePixels();
 }
 
-function loadLib() {
-  return new Promise(resolve => {
-    const imod = {
-      version: Module.cwrap("version", "number", []),
-      create_buffer: Module.cwrap("create_buffer", "number", ["number", "number"]),
-      destroy_buffer: Module.cwrap("destroy_buffer", "", ["number"]),
-      green: Module.cwrap("green", "", ["number", "number", "number", "number"]),
-      get_result_pointer: Module.cwrap("get_result_pointer", "number", []),
-      get_result_size: Module.cwrap("get_result_size", "number", [])
-    };
-    resolve(imod);
-  });
+async function useWasm() {
+  // WASM
+  loadPixels();
+
+  console.log("Canvas w: " + canvas.width + "; h: " + canvas.height + ";");
+  console.log("Image w: " + img.width + "; h: " + img.height + ";");
+  var imod = await loadLib();
+  const p = imod.create_buffer(canvas.width, canvas.height);
+  Module.HEAP8.set(pixels, p);
+  var w = imod.green(p, canvas.width, canvas.height, 4);
+
+  const resultPointer = imod.get_result_pointer();
+  const resultSize = imod.get_result_size();
+  const resultView = new Uint8Array(Module.HEAP8.buffer, resultPointer, resultSize);
+  const result = new Uint8Array(resultView);
+
+  console.log(pixels);
+  copyPixelArray(result);
+  console.log(pixels);
+  console.log(imod.version());
+
+  updatePixels();
 }
