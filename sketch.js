@@ -1,11 +1,13 @@
 // browser-sync start --server -f -w
 
-var img, originalImageData, canvas;
+var img, originalImageData, canvas, currentFilterData;
 
 async function setup() {
   pixelDensity(1);
   canvas = createCanvas(10, 10);
   canvas.parent("canvas");
+  canvas.mousePressed(pressed);
+  canvas.mouseReleased(released);
   input();
 }
 
@@ -67,7 +69,21 @@ async function useWasm(index) {
   const resultView = new Uint8Array(Module.HEAP8.buffer, resultPointer, resultSize);
   const result = new Uint8Array(resultView);
 
+  currentFilterData = result;
+
   copyPixelArray(result);
   updatePixels();
   imod.destroy_buffer(p);
+}
+
+function pressed() {
+  if (img) windowResized();
+}
+
+function released() {
+  if (img && currentFilterData !== undefined) {
+    loadPixels();
+    copyPixelArray(currentFilterData);
+    updatePixels();
+  }
 }
